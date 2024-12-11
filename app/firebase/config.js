@@ -2,7 +2,7 @@
 
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
-import { getStorage } from 'firebase/storage';
+import { getStorage ,ref,uploadBytes,getDownloadURL, listAll} from 'firebase/storage';
 
 let firebaseApp = null;
 let auth = null;
@@ -26,4 +26,4 @@ if (typeof window !== "undefined") {  // Ensure Firebase is initialized only on 
     storage = getStorage(firebaseApp);
 }
 
-export { auth, provider,storage };
+export { auth, provider,storage ,ref, uploadBytes, getDownloadURL, listAll};

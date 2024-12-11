@@ -1,32 +1,58 @@
+
+
+
 // "use client";
 // import { useEffect, useState } from "react";
-// import { auth } from "@/app/firebase/config";  // Importing from the firebase.js config
+// import { auth, storage } from "@/app/firebase/config";  // Importing from the firebase.js config
 // import VideoPlaybackQuestions from "@/components/Interview_video/Interview_video";
+// import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";  // Firebase Storage functions
 // import { getFirestore, doc, setDoc } from "firebase/firestore";  // Firestore functions
 
-// const uploadTextToFirebase = async () => {
+// // Function to upload MP4 video to Firebase Storage and store URL in Firestore
+// const uploadVideoToFirebase = async (file) => {
 //   const user = auth.currentUser;
 //   if (!user) {
 //     alert("No user found. Please log in.");
 //     return;
 //   }
 
-//   const textContent = "Hello friend";  // Text to store
-//   const db = getFirestore();
+//   // Create a storage reference to upload the file
+//   const storageRef = ref(storage, `videos/${Date.now()}_${file.name}`);
 
-//   // Create or update the user document in the 'users' collection
-//   const userDocRef = doc(db, "users", user.uid);  // Use user UID for document ID
-//   await setDoc(userDocRef, {
-//     email: user.email,  // Store user's email
-//     greetingText: textContent,  // Store the 'Hello friend' text
-//   }, { merge: true });
+//   // Create an upload task for the video file
+//   const uploadTask = uploadBytesResumable(storageRef, file);
 
-//   alert("Text and user email stored in Firestore!");
+//   // Track the upload progress
+//   uploadTask.on(
+//     "state_changed",
+//     (snapshot) => {
+//       const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+//       console.log("Upload is " + progress + "% done");
+//     },
+//     (error) => {
+//       console.error("Error uploading video:", error);
+//     },
+//     async () => {
+//       // Get the download URL once the upload is complete
+//       const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+//       console.log("Video available at", downloadURL);
+
+//       // Store the video URL in Firestore
+//       const db = getFirestore();
+//       const userDocRef = doc(db, "users", user.uid);  // Use the user UID for the document
+//       await setDoc(userDocRef, {
+//         videoURL: downloadURL,  // Store the download URL in Firestore
+//       }, { merge: true });
+
+//       alert("Video uploaded and URL stored in Firestore!");
+//     }
+//   );
 // };
 
 // export default function OrdersPage() {
 //   const [user, setUser] = useState(null);  // State to store the current user
 //   const [loading, setLoading] = useState(true);  // Loading state
+//   const [videoFile, setVideoFile] = useState(null);  // State to store the selected video file
 
 //   useEffect(() => {
 //     // Check the current user when the component mounts
@@ -36,6 +62,23 @@
 //     }
 //     setLoading(false);
 //   }, []);
+
+//   const handleVideoUpload = (event) => {
+//     const file = event.target.files[0];
+//     if (file && file.type === "video/mp4") {
+//       setVideoFile(file);  // Set the video file state
+//     } else {
+//       alert("Please select an MP4 video.");
+//     }
+//   };
+
+//   const handleUploadClick = () => {
+//     if (videoFile) {
+//       uploadVideoToFirebase(videoFile);  // Call function to upload the video
+//     } else {
+//       alert("Please select a video file first.");
+//     }
+//   };
 
 //   if (loading) {
 //     return <div>Loading...</div>;  // Show loading until user data is available
@@ -50,8 +93,17 @@
 //       <div>
 //         <h2>Welcome, {user.email}</h2>  {/* Display current user's email */}
 //       </div>
-//       <button onClick={uploadTextToFirebase} className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-4">
-//         Store Hello Text with Email in Firestore
+//       <input
+//         type="file"
+//         accept="video/mp4"
+//         onChange={handleVideoUpload}
+//         className="mt-4"
+//       />
+//       <button
+//         onClick={handleUploadClick}
+//         className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-4"
+//       >
+//         Upload MP4 Video
 //       </button>
 //       <VideoPlaybackQuestions />
 //     </>
@@ -72,9 +124,7 @@
 
 
 
-
-
-
+// ----------new ------------
 
 
 
@@ -171,7 +221,7 @@ export default function OrdersPage() {
       <div>
         <h2>Welcome, {user.email}</h2>  {/* Display current user's email */}
       </div>
-      <input
+      {/* <input
         type="file"
         accept="video/mp4"
         onChange={handleVideoUpload}
@@ -182,7 +232,7 @@ export default function OrdersPage() {
         className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-4"
       >
         Upload MP4 Video
-      </button>
+      </button> */}
       <VideoPlaybackQuestions />
     </>
   );
