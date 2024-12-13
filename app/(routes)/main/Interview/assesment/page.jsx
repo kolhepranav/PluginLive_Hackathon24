@@ -182,6 +182,19 @@ export default function OrdersPage() {
   const [loading, setLoading] = useState(true);  // Loading state
   const [videoFile, setVideoFile] = useState(null);  // State to store the selected video file
 
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+        if (user) {
+            setUser(user); // Set user state with Firebase user object
+        } else {
+            setUser(null); // Reset user state if not logged in
+        }
+    });
+    return () => unsubscribe(); // Clean up the subscription on unmount
+}, []);
+
+
   useEffect(() => {
     // Check the current user when the component mounts
     const currentUser = auth.currentUser;

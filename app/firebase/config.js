@@ -1,13 +1,15 @@
 
 
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, } from "firebase/auth";
 import { getStorage ,ref,uploadBytes,getDownloadURL, listAll} from 'firebase/storage';
+import { getFirestore } from 'firebase/firestore';
 
 let firebaseApp = null;
 let auth = null;
 let provider = null;
 let storage=null;
+let db = null;
 
 if (typeof window !== "undefined") {  // Ensure Firebase is initialized only on the client
     const firebaseConfig = {
@@ -24,6 +26,7 @@ if (typeof window !== "undefined") {  // Ensure Firebase is initialized only on 
     auth = getAuth(firebaseApp);
     provider = new GoogleAuthProvider();
     storage = getStorage(firebaseApp);
+    db = getFirestore(firebaseApp);
 }
 
-export { auth, provider,storage ,ref, uploadBytes, getDownloadURL, listAll};
+export { auth, provider,storage ,ref, uploadBytes, getDownloadURL, listAll,db};
