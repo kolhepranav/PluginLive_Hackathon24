@@ -5,32 +5,46 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 First, run the development server:
 
 ```bash
+cd project
+
+npm install
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
 ```
+
+Second, run the flask server:
+
+```bash
+cd models
+
+python app.py
+
+```
+Make sure ffmpeg.exe file is present in the same folder as that of app.py file (models folder here) !
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+## Deploy on Render
 
-To learn more about Next.js, take a look at the following resources:
+Deployed link [Deployed link Platform](https://plugin-hackathon-echelon-2.onrender.com) 
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Important Instructions
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+APP :-
+Sometimes we need to the following things if the app is not responding properly. You can directly access the wen app from the above mentioned link:
+1. Click on the Login As User in the welcome page using google login authentication.
+2. Then go on the Interview Page on the left menu.
+3. The issue here is its getting login out when clicked on the Interview page so login again from the botton left button In the menu.
+4. The scroll down and click on the Start Assessment button.
+5. Then on the new page give permission for the camera.
+6. Then click on the start button to start the video from the right menu , And to stop click the stop button, and then submit the video and wait for the pop to “Video Submitted successfully”. Do this step for all steps.
+7. Then at the last click on the generate report button . Sometimes it gives error failed to generate report that time , again click on the generate report button.
+8. At the report page you will be able to see the generated report and at bottom there is a feedback button than can be used for downloading the feedback. It will redirect to the google drive where it is saved you can download it from there.
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
