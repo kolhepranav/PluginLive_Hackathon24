@@ -30,7 +30,8 @@ You can start editing the page by modifying `app/page.js`. The page auto-updates
 
 ## Deploy on Render
 
-Deployed link [Deployed link Platform](https://plugin-hackathon-echelon-2.onrender.com) 
+Deployed link [Deployed link Platform](https://plugin-hackathon-echelon-2.onrender.com) <br />
+Alternative Deployed link [Deployed link Platform1](https://plugin-hackathon-echelon.onrender.com) 
 
 ## Important Instructions
 
