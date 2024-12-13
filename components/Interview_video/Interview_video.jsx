@@ -9,6 +9,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FaPlay, FaPause, FaVolumeMute, FaVolumeUp, FaEye, FaStop } from "react-icons/fa";
 import { auth,storage,ref,uploadBytes,getDownloadURL, listAll ,db} from "@/app/firebase/config";
+import { CircularProgress } from "@mui/material";
 import { doc, setDoc } from 'firebase/firestore';
 
 
@@ -18,6 +19,9 @@ const VideoPlaybackQuestions = () => {
 
   const [user, setUser] = useState(null); 
   const [loading, setLoading] = useState(true);  // Loading state
+  const [Subloading, setSubloading] = useState({});  // Loading state
+
+  const [PGloading, setPGLoading] = useState(false); // State to track loading
 
   const [videoUrls, setVideoUrls] = useState([]);
 
@@ -416,6 +420,8 @@ const VideoPlaybackQuestions = () => {
 
 
   const handleGenerateReport = async () => {
+    setPGLoading(true)
+
     try {
       // Create a reference to the Firebase Storage folder
       const storageRef = ref(storage, `${user.email}/`);
@@ -462,141 +468,12 @@ const VideoPlaybackQuestions = () => {
       // json_div.innerHTML = JSON.stringify(result, null, 2)
 
 
-
+      setLoading(false);
 
 
 
       
-      // Log the results
-      console.log('Processing results:', result);
-
-      console.log('user Email main : ',user.email)
-
-      console.log("transcription_1_data : ", result.transcription_1.transcription);
-
-      console.log("transcription_1_preview : ", videoUrls[0]);
-
-      console.log("transcription_1_grammatical_count : ",result.transcription_1.metrics.grammatical_errors.count);
-      console.log("transcription_1_grammatical_list_main : ",result.transcription_1.metrics.grammatical_errors.details);
-
       
-      console.log("transcription_1_word_clarity_score : ",result.transcription_1.metrics.word_clarity.score);
-      console.log("transcription_1_word_clarity_words_list : ",result.transcription_1.metrics.word_clarity.unclear_words);
-
-
-      console.log("transcription_1_Phonetic_Accuracy_score : ",result.transcription_1.metrics.phonetic_accuracy.score);
-      console.log("transcription_1_Phonetic_Accuracy_words_list : ",result.transcription_1.metrics.phonetic_accuracy.issues);
-      
-      console.log("transcription_1_Pause_patterns_Avg_pause_score : ",result.transcription_1.metrics.pause_patterns.average_pause_duration);
-      console.log("transcription_1_Pause_patterns_Longest_pause_score : ",result.transcription_1.metrics.pause_patterns.short_pauses);
-      
-      console.log("transcription_1_Filler_word_usage_count : ",result.transcription_1.metrics.filler_word_usage.count);
-      console.log("transcription_1_Filler_word_Issues_in_words_list : ",result.transcription_1.metrics.filler_word_usage.details);
-      
-      console.log("transcription_1_Speaking_pace_WPM : ",result.transcription_1.metrics.speaking_pace.words_per_minute);
-      console.log("transcription_1_Speaking_pace_Variability_text : ",result.transcription_1.metrics.speaking_pace.variability);
-
-
-
-
-
-
-
-
-
-      console.log("transcription_2_data : ", result.transcription_2.transcription);
-
-      console.log("transcription_2_preview : ", videoUrls[1])
-
-      console.log("transcription_2_grammatical_count : ",result.transcription_2.metrics.grammatical_errors.count);
-      console.log("transcription_2_grammatical_list_main : ",result.transcription_2.metrics.grammatical_errors.details);
-
-      
-      console.log("transcription_2_word_clarity_score : ",result.transcription_2.metrics.word_clarity.score);
-      console.log("transcription_2_word_clarity_words_list : ",result.transcription_2.metrics.word_clarity.unclear_words);
-
-
-      console.log("transcription_2_Phonetic_Accuracy_score : ",result.transcription_2.metrics.phonetic_accuracy.score);
-      console.log("transcription_2_Phonetic_Accuracy_words_list : ",result.transcription_2.metrics.phonetic_accuracy.issues);
-      
-      console.log("transcription_2_Pause_patterns_Avg_pause_score : ",result.transcription_2.metrics.pause_patterns.average_pause_duration);
-      console.log("transcription_2_Pause_patterns_Longest_pause_score : ",result.transcription_2.metrics.pause_patterns.short_pauses);
-      
-      console.log("transcription_2_Filler_word_usage_count : ",result.transcription_2.metrics.filler_word_usage.count);
-      console.log("transcription_2_Filler_word_Issues_in_words_list : ",result.transcription_2.metrics.filler_word_usage.details);
-      
-      console.log("transcription_2_Speaking_pace_WPM : ",result.transcription_2.metrics.speaking_pace.words_per_minute);
-      console.log("transcription_2_Speaking_pace_Variability_text : ",result.transcription_2.metrics.speaking_pace.variability);
-
-
-
-
-
-
-
-      console.log("transcription_3_data : ", result.transcription_3.transcription);
-
-      console.log("transcription_3_preview : ", videoUrls[2]);
-
-      console.log("transcription_3_grammatical_count : ",result.transcription_3.metrics.grammatical_errors.count);
-      console.log("transcription_3_grammatical_list_main : ",result.transcription_3.metrics.grammatical_errors.details);
-
-      
-      console.log("transcription_3_word_clarity_score : ",result.transcription_3.metrics.word_clarity.score);
-      console.log("transcription_3_word_clarity_words_list : ",result.transcription_3.metrics.word_clarity.unclear_words);
-
-
-      console.log("transcription_3_Phonetic_Accuracy_score : ",result.transcription_3.metrics.phonetic_accuracy.score);
-      console.log("transcription_3_Phonetic_Accuracy_words_list : ",result.transcription_3.metrics.phonetic_accuracy.issues);
-      
-      console.log("transcription_3_Pause_patterns_Avg_pause_score : ",result.transcription_3.metrics.pause_patterns.average_pause_duration);
-      console.log("transcription_3_Pause_patterns_Longest_pause_score : ",result.transcription_3.metrics.pause_patterns.short_pauses);
-      
-      console.log("transcription_3_Filler_word_usage_count : ",result.transcription_3.metrics.filler_word_usage.count);
-      console.log("transcription_3_Filler_word_Issues_in_words_list : ",result.transcription_3.metrics.filler_word_usage.details);
-      
-      console.log("transcription_3_Speaking_pace_WPM : ",result.transcription_3.metrics.speaking_pace.words_per_minute);
-      console.log("transcription_3_Speaking_pace_Variability_text : ",result.transcription_3.metrics.speaking_pace.variability);
-
-
-
-
-4
-
-      console.log("transcription_4_data : ", result.transcription_4.transcription);
-
-      console.log("transcription_4_preview : ", videoUrls[3]);
-
-      console.log("transcription_4_grammatical_count : ",result.transcription_4.metrics.grammatical_errors.count);
-      console.log("transcription_4_grammatical_list_main : ",result.transcription_4.metrics.grammatical_errors.details);
-
-      
-      console.log("transcription_4_word_clarity_score : ",result.transcription_4.metrics.word_clarity.score);
-      console.log("transcription_4_word_clarity_words_list : ",result.transcription_4.metrics.word_clarity.unclear_words);
-
-
-      console.log("transcription_4_Phonetic_Accuracy_score : ",result.transcription_4.metrics.phonetic_accuracy.score);
-      console.log("transcription_4_Phonetic_Accuracy_words_list : ",result.transcription_4.metrics.phonetic_accuracy.issues);
-      
-      console.log("transcription_4_Pause_patterns_Avg_pause_score : ",result.transcription_4.metrics.pause_patterns.average_pause_duration);
-      console.log("transcription_4_Pause_patterns_Longest_pause_score : ",result.transcription_4.metrics.pause_patterns.short_pauses);
-      
-      console.log("transcription_4_Filler_word_usage_count : ",result.transcription_4.metrics.filler_word_usage.count);
-      console.log("transcription_4_Filler_word_Issues_in_words_list : ",result.transcription_4.metrics.filler_word_usage.details);
-      
-      console.log("transcription_4_Speaking_pace_WPM : ",result.transcription_4.metrics.speaking_pace.words_per_minute);
-      console.log("transcription_4_Speaking_pace_Variability_text : ",result.transcription_4.metrics.speaking_pace.variability);
-      
-
-
-
-
-      console.log("transcription overall feedback : ",result.feedback)
-
-
-
-
-
 // Flatten the result to store as key-value pairs in Firestore
 const dataToStore = {
   email: user.email,
@@ -668,19 +545,6 @@ const docRef = doc(db, 'reports', user.email); // 'reports' is the collection, a
 await setDoc(docRef, dataToStore);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 // const json_div = document.getElementById('json_content')
 // json_div.innerHTML = JSON.stringify(result, null, 2)
 
@@ -703,6 +567,8 @@ alert('Videos processed and data stored in Firestore successfully!');
       setTimeout(() => {
         setSuccessMessage('');
       }, 3000);
+    } finally {
+      setLoading(false); // Hide progress bar
     }
   };
   
@@ -758,6 +624,8 @@ alert('Videos processed and data stored in Firestore successfully!');
 
   const handleSubmit = async (questionId) => {
     // Check if the recording exists for the current question
+       // Set loading for this specific question
+       setSubloading((prev) => ({ ...prev, [questionId]: true }));
     const videoUrl = recordings[questionId];
     if (!videoUrl) {
       console.log("No video found for this question.");
@@ -799,7 +667,10 @@ alert('Videos processed and data stored in Firestore successfully!');
       // Set a timer to remove the error message after 3 seconds
       setTimeout(() => {
         setSuccessMessage('');
-      }, 3000); // 3000ms = 3 seconds
+      }, 3000);
+    }
+    finally {
+      setSubloading((prev) => ({ ...prev, [questionId]: false }));
     }
 
 
@@ -1309,6 +1180,11 @@ alert('Videos processed and data stored in Firestore successfully!');
                   >
                     Submit
                   </button>
+                  {Subloading[question.id] && (
+              <div>
+                <CircularProgress />
+              </div>
+            )}
                 </div>
               </div>
             ))}
@@ -1361,16 +1237,36 @@ alert('Videos processed and data stored in Firestore successfully!');
 
 
        {/* When the index is 3, disable the Next button and show the Generate Report button */}
-       {activeQuestionIndex === 3 && (
+       {/* {activeQuestionIndex === 3 && (
         <button
           className="bg-green-500 text-white py-2 px-4 rounded mt-4 hover:bg-green-700 transition duration-300"
           onClick={() => handleGenerateReport()}
         >
           Generate Report
         </button>
+      )} */}
+ {PGloading && (
+        <div>
+          <CircularProgress />
+          {/* <p>Processing your request...</p> */}
+        </div>
       )}
+        
 
+       {activeQuestionIndex === 3 && (
 
+<div>
+        <button
+          className="bg-green-500 text-white py-2 px-4 rounded mt-4 hover:bg-green-700 transition duration-300"
+          onClick={() => handleGenerateReport()}
+        >
+          Generate Report
+        </button>
+
+       
+        </div>
+        
+      )}
 
 
 

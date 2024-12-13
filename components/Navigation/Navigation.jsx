@@ -68,7 +68,7 @@ const handleSignOut = async () => {
         ))}
       </nav>
         {/* Signout or Signin Icon */}
-        <div className="menuItem  h-full fixed bottom-0 flex justify-center items-end py-4" onClick={user ? handleSignOut : handleSignIn}>
+        <div className="menuItem fixed bottom-0 flex justify-center items-end py-4 cursor-pointer" onClick={user ? handleSignOut : handleSignIn}>
                         {user ? (
                             <>
                                 <CiLogout style={{ fontSize: 26 }} />

@@ -12,6 +12,7 @@ import { AiOutlineAudio } from "react-icons/ai";
 import { MdGrading } from "react-icons/md";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie, Doughnut } from "react-chartjs-2";
+// import demo from "../../../../../public/Feedback_Report.pdf"
 
 
 
@@ -191,21 +192,21 @@ const page = () => {
           // ......default for all data .........
 
 
-          transcription_grammer_avg = ((result.transcription_1_grammatical_count + result.transcription_2_grammatical_count + result.transcription_3_grammatical_count + result.transcription_4_grammatical_count) / 4) * 100
+          transcription_grammer_avg = Math.round(((result.transcription_1_grammatical_count + result.transcription_2_grammatical_count + result.transcription_3_grammatical_count + result.transcription_4_grammatical_count) / 4) )
           console.log("transcription_grammer_avg", transcription_grammer_avg)
           settranscription_grammer_avg(transcription_grammer_avg)
 
 
-          transcription_clarity_avg = ((result.transcription_1_word_clarity_score + result.transcription_2_word_clarity_score + result.transcription_3_word_clarity_score + result.transcription_4_word_clarity_score) / 4) * 100
+          transcription_clarity_avg = Math.round(((result.transcription_1_word_clarity_score + result.transcription_2_word_clarity_score + result.transcription_3_word_clarity_score + result.transcription_4_word_clarity_score) / 4) )
           settranscription_clarity_avg(transcription_clarity_avg)
 
 
 
-          transcription_phonetic_accuracy_score = ((result.transcription_1_phonetic_accuracy_score + result.transcription_2_phonetic_accuracy_score + result.transcription_3_phonetic_accuracy_score + result.transcription_4_phonetic_accuracy_score) / 4) * 100
+          transcription_phonetic_accuracy_score = Math.round(((result.transcription_1_phonetic_accuracy_score + result.transcription_2_phonetic_accuracy_score + result.transcription_3_phonetic_accuracy_score + result.transcription_4_phonetic_accuracy_score) / 4) )
           settranscription_phonetic_accuracy_score(transcription_phonetic_accuracy_score)
 
 
-          transcription_pause_patterns_avg_pause_score = ((result.transcription_1_pause_patterns_avg_pause_score + result.transcription_2_pause_patterns_avg_pause_score + result.transcription_3_pause_patterns_avg_pause_score + result.transcription_4_pause_patterns_avg_pause_score) / 4) * 100
+          transcription_pause_patterns_avg_pause_score = Math.round(((result.transcription_1_pause_patterns_avg_pause_score + result.transcription_2_pause_patterns_avg_pause_score + result.transcription_3_pause_patterns_avg_pause_score + result.transcription_4_pause_patterns_avg_pause_score) / 4))
           settranscription_pause_patterns_avg_pause_score(transcription_pause_patterns_avg_pause_score)
 
 
@@ -455,21 +456,21 @@ const page = () => {
 
 
         
-        transcription_grammer_avg = ((result.transcription_1_grammatical_count + result.transcription_2_grammatical_count + result.transcription_3_grammatical_count + result.transcription_4_grammatical_count) / 4) * 100
+        transcription_grammer_avg = Math.round(((result.transcription_1_grammatical_count + result.transcription_2_grammatical_count + result.transcription_3_grammatical_count + result.transcription_4_grammatical_count) / 4))
         console.log("transcription_grammer_avg", transcription_grammer_avg)
         settranscription_grammer_avg(transcription_grammer_avg)
 
 
-        transcription_clarity_avg = ((result.transcription_1_word_clarity_score + result.transcription_2_word_clarity_score + result.transcription_3_word_clarity_score + result.transcription_4_word_clarity_score) / 4) * 100
+        transcription_clarity_avg =Math.round(((result.transcription_1_word_clarity_score + result.transcription_2_word_clarity_score + result.transcription_3_word_clarity_score + result.transcription_4_word_clarity_score) / 4) )
         settranscription_clarity_avg(transcription_clarity_avg)
 
 
 
-        transcription_phonetic_accuracy_score = ((result.transcription_1_phonetic_accuracy_score + result.transcription_2_phonetic_accuracy_score + result.transcription_3_phonetic_accuracy_score + result.transcription_4_phonetic_accuracy_score) / 4) * 100
+        transcription_phonetic_accuracy_score = Math.round(((result.transcription_1_phonetic_accuracy_score + result.transcription_2_phonetic_accuracy_score + result.transcription_3_phonetic_accuracy_score + result.transcription_4_phonetic_accuracy_score) / 4))
         settranscription_phonetic_accuracy_score(transcription_phonetic_accuracy_score)
 
 
-        transcription_pause_patterns_avg_pause_score = ((result.transcription_1_pause_patterns_avg_pause_score + result.transcription_2_pause_patterns_avg_pause_score + result.transcription_3_pause_patterns_avg_pause_score + result.transcription_4_pause_patterns_avg_pause_score) / 4) * 100
+        transcription_pause_patterns_avg_pause_score = Math.round(((result.transcription_1_pause_patterns_avg_pause_score + result.transcription_2_pause_patterns_avg_pause_score + result.transcription_3_pause_patterns_avg_pause_score + result.transcription_4_pause_patterns_avg_pause_score) / 4))
         settranscription_pause_patterns_avg_pause_score(transcription_pause_patterns_avg_pause_score)
 
 
@@ -673,15 +674,16 @@ const page = () => {
     }
   };
   const handleDownload = () => {
-    const pdfUrl = "https://drive.google.com/file/d/1rJx8ebuBPO96JrU1DzBAMlVjt_v1tace/view?usp=sharing"; // Replace with your PDF URL
+    const pdfUrl = "https://drive.google.com/uc?export=download&id=1rJx8ebuBPO96JrU1DzBAMlVjt_v1tace"; // Direct download link
     const link = document.createElement("a");
     link.href = pdfUrl;
-    link.download = "sample.pdf"; // This sets the downloaded file name
-    link.target = "_blank"; // Opens the link in a new tab (optional)
+    link.download = "sample.pdf"; // Set the downloaded file name
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link); // Clean up the DOM
   };
+  
+  
 
 
   return (
