@@ -1,10 +1,9 @@
 import os
 from flask import Flask, request, jsonify
-from moviepy.editor import VideoFileClip
+import subprocess
 import google.generativeai as genai
 from dotenv import load_dotenv
 import json
-import logging
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
 from concurrent.futures import ThreadPoolExecutor
@@ -21,13 +20,15 @@ CORS(app)
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-logging.getLogger("moviepy").setLevel(logging.ERROR)
+
+
 
 # Load environment variables from the .env file
 load_dotenv()
 
 # Configure the Gemini API with your API key
-api_key = os.getenv("GEMINI_API_KEY")
+# api_key = os.environ.get("GENAI_API_KEY")
+api_key = "AIzaSyCqVgINO7rTe3jOBlIzscIv2vyCF7wCcI8"
 
 genai.configure(api_key=api_key)
 
@@ -129,6 +130,8 @@ def transcribe_mp3_file(mp3_file_path):
 
         # Generate content using the uploaded file
         result = model.generate_content([myfile, prompt])
+
+        print("Transcription Finished {}".format(mp3_file_path))
 
         # Check if the response contains any text
         if result and hasattr(result, 'text'):
@@ -243,7 +246,7 @@ def download_video_to_memory(url):
         total=total_size,
         unit='iB',
         unit_scale=True,
-        desc=f'Downloading {url.split("/")[-1]}'
+        desc=f'Downloading {url.split("/")[-1].split("?")[0]}',
     )
     
     # Download with progress
@@ -263,7 +266,7 @@ def download_single_video(url, index):
         os.makedirs(url_folder, exist_ok=True)
         
         video_data = download_video_to_memory(url)
-        filename = secure_filename(url.split("/")[-1])
+        filename = secure_filename(url.split("/")[-1].split("?")[0])
         video_path = os.path.join(url_folder, filename)
         
         with open(video_path, "wb") as video_file:
@@ -279,9 +282,24 @@ def process_video_file(video_path, index):
     try:
         # Extract audio
         url_folder = os.path.dirname(video_path)
-        audio_path = os.path.join(url_folder, f"audio_{index}.mp3")
-        video_clip = VideoFileClip(video_path)
-        video_clip.audio.write_audiofile(audio_path, verbose=False, logger=None)
+        # Get the video filename without extension
+        video_filename = os.path.splitext(os.path.basename(video_path))[0]
+        # Create audio path with same filename but .mp3 extension
+        audio_path = os.path.join(url_folder, f"{video_filename}.mp3")
+
+        if os.path.exists(audio_path):
+            # Check if the audio file already exists and delete it if present
+            os.remove(audio_path)
+        
+        # Convert video file to mp3 using ffmpeg
+        command = [
+            'ffmpeg.exe',
+            '-i', video_path,
+            '-q:a', '0',
+            '-map', 'a',
+            audio_path
+        ]
+        subprocess.run(command, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         
         # Generate transcript
         transcription = transcribe_mp3_file(audio_path)
@@ -298,26 +316,19 @@ def process_url_list(urls):
     try:
         downloaded_files = {}
         results = {}
-        timeout = 3000  
+        # timeout = 300
 
         # Phase 1: Download all videos in parallel
         print("Phase 1: Downloading videos...")
-        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
-            future_to_url = {
-                executor.submit(download_single_video, url, i + 1): (url, i + 1) 
-                for i, url in enumerate(urls)
-            }
-            
-            for future in concurrent.futures.as_completed(future_to_url, timeout=timeout):
-                url, index = future_to_url[future]
-                try:
-                    path = future.result()
-                    if isinstance(path, dict):  # Error occurred
-                        results[f"transcription_{index}"] = {"error": path["error"]}
-                    else:
-                        downloaded_files[index] = path
-                except Exception as e:
-                    results[f"transcription_{index}"] = {"error": str(e)}
+        for i, url in enumerate(urls):
+            try:
+                path = download_single_video(url, i + 1)
+                if isinstance(path, dict):  # Error occurred
+                    results[f"transcription_{i + 1}"] = {"error": path["error"]}
+                else:
+                    downloaded_files[i + 1] = path
+            except Exception as e:
+                results[f"transcription_{i + 1}"] = {"error": str(e)}
 
         # Phase 2: Process downloaded videos in parallel
         print("\nPhase 2: Processing videos...")
@@ -327,7 +338,7 @@ def process_url_list(urls):
                 for index, path in downloaded_files.items()
             }
             
-            for future in concurrent.futures.as_completed(future_to_file, timeout=timeout):
+            for future in concurrent.futures.as_completed(future_to_file, timeout=3000):
                 index = future_to_file[future]
                 try:
                     result = future.result()
@@ -337,7 +348,7 @@ def process_url_list(urls):
 
         # Generate feedback
         final_result = get_feedback(results)
-        results["feedback"] = final_result
+        results["feedback"] = json.loads(final_result)
         return results
 
     except Exception as e:
@@ -363,11 +374,10 @@ def process_videos():
 
         # Process videos and get results
         results = process_url_list(video_urls)
-        print(results)
         return jsonify(results)
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=8080)

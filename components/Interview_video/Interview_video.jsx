@@ -442,7 +442,7 @@ const VideoPlaybackQuestions = () => {
       // ........ main code working .............................. 
   
       // Send the video URLs to the Flask server
-      const response = await fetch('https://flask-app-474906381393.us-central1.run.app/process-videos', {
+      const response = await fetch('http://127.0.0.1:8080/process-videos', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
